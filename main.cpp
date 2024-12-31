@@ -3,22 +3,28 @@
 #include <QTime>
 #include <ctime>
 #include <unistd.h>
+#include <QObject>
+#include <QTimer>
 
 using namespace std;
+
+int localSecond;
 
 int main(int argc, char **argv)
 {
     QApplication app (argc, argv);
     QLCDNumber clock;
+    QTimer timer;
 
-    time_t now = time(nullptr);
-    tm* localTime = localtime(&now);
+    QObject::connect(&timer, &QTimer::timeout, [&clock](){
+        time_t now = time(nullptr);
+        tm* localTime = localtime(&now);
+        localSecond = localTime->tm_sec;
+        clock.display(localSecond);
+    });
 
-    int localSecond = localTime->tm_sec;
-    QTime time (14, 0, localSecond, 0);
-    sleep(1);
+    timer.start(1000);
 
-    clock.display(time.second());
     clock.show();
     return app.exec();
 }
