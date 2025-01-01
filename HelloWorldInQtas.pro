@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = QtasApp
+TARGET = LCDClock
 
 QT = core gui
 
